@@ -52,6 +52,214 @@ const FAQS = [
   },
 ];
 
+/*
+ * MAQO wordmark: orange "maqo" over the green tagline.
+ * To use the official artwork instead, drop the file in /public and swap the
+ * body of this component for:
+ *   <img src="/maqo-logo.png" alt="MAQO — Energizing a cleaner future" className="maqo-img" />
+ */
+function MaqoLogo({ compact = false }: { compact?: boolean }) {
+  return (
+    <span
+      className={"maqo-logo" + (compact ? " compact" : "")}
+      role="img"
+      aria-label="MAQO — Energizing a cleaner future"
+    >
+      <span className="maqo-word" aria-hidden="true">
+        maqo
+      </span>
+      <span className="maqo-tag" aria-hidden="true">
+        Energizing a cleaner future
+      </span>
+    </span>
+  );
+}
+
+function WhatsAppIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true">
+      <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.15h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.11.82.83-3.04-.2-.31a8.16 8.16 0 0 1-1.26-4.38c0-4.54 3.7-8.23 8.24-8.23a8.2 8.2 0 0 1 8.23 8.24c0 4.54-3.69 8.23-8.23 8.23Zm4.52-6.16c-.25-.13-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.17.24-.64.8-.79.97-.14.16-.29.18-.54.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.09-.17.04-.31-.02-.43-.06-.13-.56-1.35-.77-1.85-.2-.48-.4-.42-.56-.43h-.47c-.17 0-.43.06-.66.31-.23.25-.86.85-.86 2.06 0 1.22.89 2.39 1.01 2.56.12.16 1.74 2.66 4.22 3.73.59.25 1.05.4 1.4.52.59.19 1.13.16 1.55.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.1-.23-.16-.48-.29Z" />
+    </svg>
+  );
+}
+
+/* Hero illustration: rooftop solar array feeding a home EV charger. */
+function SolarEvScene() {
+  return (
+    <svg
+      className="solar-ev"
+      viewBox="0 0 560 400"
+      width="100%"
+      role="img"
+      aria-label="A house with rooftop solar panels powering a wall charger that is charging an electric car in the driveway"
+    >
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#DCEBFB" />
+          <stop offset="100%" stopColor="#F6FAFF" />
+        </linearGradient>
+        <linearGradient id="panelFace" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#1D5FA8" />
+          <stop offset="100%" stopColor="#0B2A52" />
+        </linearGradient>
+        <linearGradient id="carBody" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#F7FAFF" />
+          <stop offset="100%" stopColor="#D8E3F2" />
+        </linearGradient>
+      </defs>
+
+      <rect x="0" y="0" width="560" height="400" rx="14" fill="url(#sky)" />
+
+      {/* Sun */}
+      <g className="sun">
+        <circle cx="468" cy="74" r="30" fill="#F5A623" opacity="0.18" />
+        <circle cx="468" cy="74" r="21" fill="#F5A623" />
+        <g stroke="#F5A623" strokeWidth="3" strokeLinecap="round" opacity="0.75">
+          <line x1="468" y1="34" x2="468" y2="44" />
+          <line x1="468" y1="104" x2="468" y2="114" />
+          <line x1="428" y1="74" x2="438" y2="74" />
+          <line x1="498" y1="74" x2="508" y2="74" />
+          <line x1="440" y1="46" x2="447" y2="53" />
+          <line x1="489" y1="95" x2="496" y2="102" />
+          <line x1="440" y1="102" x2="447" y2="95" />
+          <line x1="489" y1="53" x2="496" y2="46" />
+        </g>
+      </g>
+
+      {/* Ground */}
+      <rect x="0" y="330" width="560" height="70" fill="#E7EDF6" />
+      <rect x="0" y="330" width="560" height="3" fill="#D5DEEB" />
+      {/* Driveway */}
+      <path d="M300,330 L560,330 L560,400 L262,400 Z" fill="#DCE4EF" />
+
+      {/* House */}
+      <path d="M78,215 L302,150 L302,330 L78,330 Z" fill="#FFFFFF" />
+      <path d="M78,215 L302,150 L302,330 L78,330 Z" fill="none" stroke="#CBD6E5" strokeWidth="2" />
+      {/* Roof slab */}
+      <path d="M62,205 L306,134 L318,155 L74,226 Z" fill="#0B2A52" opacity="0.85" />
+
+      {/* Solar array */}
+      <g stroke="#4E8CD1" strokeWidth="1.2">
+        <path d="M72,192 L107,182 L114,207 L79,217 Z" fill="url(#panelFace)" />
+        <path d="M110,181 L145,171 L152,196 L117,206 Z" fill="url(#panelFace)" />
+        <path d="M148,170 L183,160 L190,185 L155,195 Z" fill="url(#panelFace)" />
+        <path d="M186,159 L221,149 L228,174 L193,184 Z" fill="url(#panelFace)" />
+        <path d="M224,148 L259,138 L266,163 L231,173 Z" fill="url(#panelFace)" />
+        <path d="M262,137 L297,127 L304,152 L269,162 Z" fill="url(#panelFace)" />
+      </g>
+      {/* Panel glare */}
+      <path d="M72,192 L297,127 L300,138 L75,203 Z" fill="#FFFFFF" opacity="0.16" />
+
+      {/* Windows + door */}
+      <rect x="104" y="248" width="46" height="38" rx="4" fill="#EAF2FB" stroke="#CBD6E5" strokeWidth="2" />
+      <line x1="127" y1="248" x2="127" y2="286" stroke="#CBD6E5" strokeWidth="2" />
+      <rect x="172" y="248" width="46" height="38" rx="4" fill="#EAF2FB" stroke="#CBD6E5" strokeWidth="2" />
+      <line x1="195" y1="248" x2="195" y2="286" stroke="#CBD6E5" strokeWidth="2" />
+      <rect x="242" y="252" width="42" height="78" rx="4" fill="#EAF2FB" stroke="#CBD6E5" strokeWidth="2" />
+      <circle cx="276" cy="292" r="3" fill="#8A94A6" />
+
+      {/* Wall charger */}
+      <rect x="306" y="232" width="28" height="46" rx="7" fill="#0F8C7C" />
+      <path d="M322,244 L313,258 L319,258 L316,268 L325,254 L319,254 Z" fill="#FFFFFF" />
+      <circle className="charger-led" cx="320" cy="273" r="2.6" fill="#C8F5D8" />
+
+      {/* Charging cable */}
+      <path
+        id="cablePath"
+        className="cable"
+        d="M334,262 C356,282 344,314 372,306"
+      />
+      <circle className="charge-dot" r="4.5" fill="#7DB928">
+        <animateMotion dur="2.4s" repeatCount="indefinite" path="M334,262 C356,282 344,314 372,306" />
+      </circle>
+      <circle className="charge-dot" r="4.5" fill="#F5A623" opacity="0.8">
+        <animateMotion dur="2.4s" begin="1.2s" repeatCount="indefinite" path="M334,262 C356,282 344,314 372,306" />
+      </circle>
+
+      {/* Car */}
+      <g>
+        <path
+          d="M368,332 L368,308 Q369,298 382,294 L406,286 Q426,262 456,262 L480,262 Q502,264 514,286 L530,294 Q540,298 540,310 L540,332 Z"
+          fill="url(#carBody)"
+          stroke="#B9C7DA"
+          strokeWidth="2"
+        />
+        <path
+          d="M410,288 Q428,270 456,270 L478,270 Q498,272 508,288 Z"
+          fill="#0B2A52"
+          opacity="0.82"
+        />
+        <line x1="456" y1="270" x2="456" y2="288" stroke="#B9C7DA" strokeWidth="2" />
+        {/* Charge port */}
+        <circle cx="375" cy="304" r="6" fill="#0F8C7C" />
+        <circle cx="375" cy="304" r="2.2" fill="#FFFFFF" />
+        {/* Lights */}
+        <rect x="533" y="300" width="8" height="7" rx="3" fill="#F5A623" />
+        {/* Wheels */}
+        <circle cx="404" cy="332" r="19" fill="#1B2536" />
+        <circle cx="404" cy="332" r="8" fill="#C7D2E1" />
+        <circle cx="506" cy="332" r="19" fill="#1B2536" />
+        <circle cx="506" cy="332" r="8" fill="#C7D2E1" />
+      </g>
+
+      {/* Battery badge */}
+      <g className="ev-badge">
+        <rect x="404" y="212" width="112" height="34" rx="17" fill="#FFFFFF" stroke="#D7E2F0" strokeWidth="1.5" />
+        <rect x="418" y="223" width="22" height="12" rx="3" fill="none" stroke="#7DB928" strokeWidth="2" />
+        <rect x="441" y="226" width="3" height="6" rx="1.5" fill="#7DB928" />
+        <rect x="420" y="225" width="18" height="8" rx="1.5" fill="#7DB928">
+          <animate attributeName="width" values="4;18;18" dur="2.4s" repeatCount="indefinite" />
+        </rect>
+        <text x="452" y="234" className="ev-badge-text">
+          Charging
+        </text>
+      </g>
+    </svg>
+  );
+}
+
+/* Sun → panels → charger flow diagram (shown in "How it works"). */
+function ElectronFlow() {
+  return (
+    <div className="flow-card">
+      <h4>Where your EV&apos;s electrons come from</h4>
+      <svg viewBox="0 0 320 220" width="100%" height="220" aria-hidden="true">
+        <path
+          id="flowPath"
+          className="flow-path"
+          d="M40,40 C120,40 100,110 160,110 C220,110 200,180 280,180"
+        />
+        <circle className="flow-node" cx="40" cy="40" r="20" />
+        <text className="flow-label" x="40" y="20" textAnchor="middle">
+          Sun
+        </text>
+        <circle className="flow-node" cx="160" cy="110" r="20" />
+        <text className="flow-label" x="160" y="90" textAnchor="middle">
+          Rooftop panels
+        </text>
+        <circle className="flow-node" cx="280" cy="180" r="20" />
+        <text className="flow-label" x="280" y="205" textAnchor="middle">
+          EV charger
+        </text>
+        <circle
+          className="flow-dot"
+          r="5"
+          style={
+            {
+              offsetPath:
+                "path('M40,40 C120,40 100,110 160,110 C220,110 200,180 280,180')",
+            } as React.CSSProperties
+          }
+        />
+      </svg>
+      <p className="flow-note">
+        Every kWh your car takes at home can come off your own roof instead of
+        TNB&apos;s highest tier.
+      </p>
+    </div>
+  );
+}
+
 export default function Page() {
   const [bill, setBill] = useState(650);
   const [chargeTime, setChargeTime] = useState<ChargeTime>("night");
@@ -86,15 +294,13 @@ export default function Page() {
     <>
       <header>
         <div className="wrap nav">
-          <div className="brand">
-            <div className="brand-mark">M</div>
-            <div>
-              MAQO ATAP<span className="brand-sub">Solar for EV homes</span>
-            </div>
-          </div>
+          <a className="brand" href="#top" aria-label="MAQO home">
+            <MaqoLogo />
+          </a>
           <div className="nav-actions">
-            <a className="btn btn-ghost" href="https://wa.me/60123220816">
-              WhatsApp
+            <a className="btn btn-whatsapp" href="https://wa.me/60123220816">
+              <WhatsAppIcon />
+              <span>WhatsApp Us</span>
             </a>
             <a className="btn btn-amber" href="#assessment">
               Free Assessment
@@ -103,28 +309,30 @@ export default function Page() {
         </div>
       </header>
 
-      <main>
+      <main id="top">
         {/* HERO */}
         <section className="hero">
           <div className="wrap hero-grid">
             <div>
-              <div className="eyebrow">MAQO ATAP · Built for EV-owning homes</div>
+              <div className="hero-badge">
+                <span className="hero-badge-dot" />
+                MAQO ATAP · Built for EV-owning homes
+              </div>
               <h1>
-                Your EV runs on electricity. <span className="flip">Stop</span>
-                <br />
-                buying it all from TNB.
+                Charge Your EV On <span className="hl">Free Sunlight</span> —
+                Not On TNB!
               </h1>
               <p className="lede">
-                Charging overnight already lifted your TNB bill. Add rooftop
-                solar under NEM and you generate the power your car uses
-                instead of paying peak rates for it — free home assessment,
-                ST Class A &amp; CIDB G7-certified installation.
+                Your car already runs on electricity. Put solar on your roof
+                under NEM and your driveway becomes your own fuel station —
+                up to <b>90% off your TNB bill</b>, installed by an ST Class A
+                &amp; CIDB G7-certified team.
               </p>
               <div className="hero-ctas">
-                <a className="btn btn-amber" href="#assessment">
+                <a className="btn btn-amber btn-lg" href="#assessment">
                   Get My Free Assessment
                 </a>
-                <a className="btn btn-ghost" href="#calculator">
+                <a className="btn btn-ghost btn-lg" href="#calculator">
                   See My Savings
                 </a>
               </div>
@@ -133,48 +341,17 @@ export default function Page() {
                   <b>90%</b>
                   <span>Max TNB bill reduction</span>
                 </div>
-                <div className="stat">
-                  <b>1,000+</b>
-                  <span>Malaysian homes powered since 2013</span>
-                </div>
-                <div className="stat">
-                  <b>1–3 days</b>
-                  <span>Typical installation time</span>
-                </div>
+                <ul className="hero-trust">
+                  <li>ST Class A</li>
+                  <li>CIDB G7</li>
+                  <li>SEDA Registered</li>
+                  <li>ISO 9001:2015</li>
+                </ul>
               </div>
             </div>
 
-            <div className="flow-card">
-              <h4>Where your EV&apos;s electrons come from</h4>
-              <svg viewBox="0 0 320 220" width="100%" height="220" aria-hidden="true">
-                <path
-                  id="flowPath"
-                  className="flow-path"
-                  d="M40,40 C120,40 100,110 160,110 C220,110 200,180 280,180"
-                />
-                <circle className="flow-node" cx="40" cy="40" r="20" />
-                <text className="flow-label" x="40" y="20" textAnchor="middle">
-                  Sun
-                </text>
-                <circle className="flow-node" cx="160" cy="110" r="20" />
-                <text className="flow-label" x="160" y="90" textAnchor="middle">
-                  Rooftop panels
-                </text>
-                <circle className="flow-node" cx="280" cy="180" r="20" />
-                <text className="flow-label" x="280" y="205" textAnchor="middle">
-                  EV charger
-                </text>
-                <circle
-                  className="flow-dot"
-                  r="5"
-                  style={
-                    {
-                      offsetPath:
-                        "path('M40,40 C120,40 100,110 160,110 C220,110 200,180 280,180')",
-                    } as React.CSSProperties
-                  }
-                />
-              </svg>
+            <div className="hero-visual">
+              <SolarEvScene />
             </div>
           </div>
         </section>
@@ -329,62 +506,65 @@ export default function Page() {
               <div className="eyebrow">How it works</div>
               <h2>From TNB bill to charging on sunlight</h2>
             </div>
-            <ol className="steps">
-              <li className="step">
-                <span className="step-num">01</span>
-                <div>
-                  <h3>Free assessment, EV included</h3>
-                  <p>
-                    We review your TNB bill, roof, and your charging habits to
-                    size a system that covers your car, not just your
-                    household.
-                  </p>
-                </div>
-              </li>
-              <li className="step">
-                <span className="step-num">02</span>
-                <div>
-                  <h3>Pick your package</h3>
-                  <p>
-                    Outright purchase or instalments, with or without battery
-                    storage. We handle the TNB NEM/ATAP application on your
-                    behalf.
-                  </p>
-                </div>
-              </li>
-              <li className="step">
-                <span className="step-num">03</span>
-                <div>
-                  <h3>Installation in 1–3 days</h3>
-                  <p>
-                    Our CIDB G7-certified in-house team installs panels,
-                    inverter, and — if selected — battery, with minimal
-                    disruption to your driveway or charger.
-                  </p>
-                </div>
-              </li>
-              <li className="step">
-                <span className="step-num">04</span>
-                <div>
-                  <h3>TNB inspection &amp; smart meter</h3>
-                  <p>
-                    TNB inspects the system and upgrades your meter so
-                    exported solar and offset EV charging are correctly
-                    recorded.
-                  </p>
-                </div>
-              </li>
-              <li className="step">
-                <span className="step-num">05</span>
-                <div>
-                  <h3>Charge, monitor, save</h3>
-                  <p>
-                    Track generation and EV charging load side by side in the
-                    app, backed by ongoing MAQO after-sales support.
-                  </p>
-                </div>
-              </li>
-            </ol>
+            <div className="how-grid">
+              <ol className="steps">
+                <li className="step">
+                  <span className="step-num">01</span>
+                  <div>
+                    <h3>Free assessment, EV included</h3>
+                    <p>
+                      We review your TNB bill, roof, and your charging habits to
+                      size a system that covers your car, not just your
+                      household.
+                    </p>
+                  </div>
+                </li>
+                <li className="step">
+                  <span className="step-num">02</span>
+                  <div>
+                    <h3>Pick your package</h3>
+                    <p>
+                      Outright purchase or instalments, with or without battery
+                      storage. We handle the TNB NEM/ATAP application on your
+                      behalf.
+                    </p>
+                  </div>
+                </li>
+                <li className="step">
+                  <span className="step-num">03</span>
+                  <div>
+                    <h3>Installation in 1–3 days</h3>
+                    <p>
+                      Our CIDB G7-certified in-house team installs panels,
+                      inverter, and — if selected — battery, with minimal
+                      disruption to your driveway or charger.
+                    </p>
+                  </div>
+                </li>
+                <li className="step">
+                  <span className="step-num">04</span>
+                  <div>
+                    <h3>TNB inspection &amp; smart meter</h3>
+                    <p>
+                      TNB inspects the system and upgrades your meter so
+                      exported solar and offset EV charging are correctly
+                      recorded.
+                    </p>
+                  </div>
+                </li>
+                <li className="step">
+                  <span className="step-num">05</span>
+                  <div>
+                    <h3>Charge, monitor, save</h3>
+                    <p>
+                      Track generation and EV charging load side by side in the
+                      app, backed by ongoing MAQO after-sales support.
+                    </p>
+                  </div>
+                </li>
+              </ol>
+              <ElectronFlow />
+            </div>
           </div>
         </section>
 
@@ -413,10 +593,6 @@ export default function Page() {
               <div>
                 <b>Real-time monitoring app</b>
                 <span>See generation vs. charging consumption side by side.</span>
-              </div>
-              <div>
-                <b>Scheduled maintenance</b>
-                <span>Routine checks to keep output at spec.</span>
               </div>
               <div>
                 <b>Dedicated support</b>
@@ -518,6 +694,10 @@ export default function Page() {
               <li>We handle your TNB NEM / ATAP application</li>
               <li>Sized around your actual EV charging pattern</li>
             </ul>
+            <a className="btn btn-whatsapp" href="https://wa.me/60123220816">
+              <WhatsAppIcon />
+              WhatsApp Us
+            </a>
           </div>
           <form onSubmit={handleSubmit}>
             <div className="form-row">
@@ -628,13 +808,10 @@ export default function Page() {
         <div className="wrap">
           <div className="foot-grid">
             <div className="foot-brand">
-              <div className="brand">
-                <div className="brand-mark">M</div>
-                MAQO Engineering Sdn Bhd
-              </div>
+              <MaqoLogo />
               <p>
-                Energizing a cleaner future — one solar panel, one battery,
-                one EV charged at a time.
+                MAQO Engineering Sdn Bhd — one solar panel, one battery, one
+                EV charged at a time.
               </p>
               <p style={{ marginTop: 10, color: "var(--ink-faint)" }}>
                 ST Class A · CIDB G7 · SEDA Registered · ISO 9001:2015
@@ -660,6 +837,16 @@ export default function Page() {
           </div>
         </div>
       </footer>
+
+      {/* Floating WhatsApp */}
+      <a
+        className="wa-float"
+        href="https://wa.me/60123220816"
+        aria-label="WhatsApp Us"
+      >
+        <WhatsAppIcon />
+        <span>WhatsApp Us</span>
+      </a>
     </>
   );
 }

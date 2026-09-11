@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "MAQO ATAP | Solar for EV Owners — Stop Charging on TNB's Dime",
+  title: "MAQO ATAP | Charge Your EV On Free Sunlight — Not On TNB",
   description:
-    "Charging your EV at home is pushing your TNB bill up. Pair it with solar and charge on sunlight instead. Free home assessment, ST Class A & CIDB G7 certified.",
+    "Home EV charging is pushing your TNB bill up. Rooftop solar under NEM turns your driveway into your own fuel station — up to 90% off your bill. Free home assessment, ST Class A & CIDB G7 certified.",
 };
 
 export default function RootLayout({
