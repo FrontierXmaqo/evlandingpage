@@ -112,8 +112,8 @@ h3{font-size:1.12rem; letter-spacing:-0.02em;}
 .link-arrow:hover{gap:12px; border-color:var(--green);}
 
 /* ---------- MAQO wordmark (image) ---------- */
-.maqo-img{height:44px; width:auto; display:block;}
-.foot-brand .maqo-img{height:40px;}
+.maqo-img{height:68px; width:auto; display:block;}
+.foot-brand .maqo-img{height:60px;}
 
 /* ---------- Header ---------- */
 header{
@@ -121,7 +121,7 @@ header{
   background:rgba(255,255,255,0.88); backdrop-filter:blur(14px);
   border-bottom:1px solid var(--line);
 }
-.nav{display:flex; align-items:center; gap:28px; padding:14px 28px;}
+.nav{display:flex; align-items:center; gap:28px; padding:8px 28px;}
 .brand{display:flex; align-items:center; flex:none;}
 .nav-links{display:flex; gap:26px; margin-left:auto; font-size:0.9rem; font-weight:500; color:var(--text-dim);}
 .nav-links a{position:relative; padding:4px 0;}
@@ -454,6 +454,6 @@ footer{background:var(--ink-2); color:rgba(255,255,255,0.72); padding:64px 0 108
   .nav-actions .btn-whatsapp span, .wa-float span{display:none;}
   .wa-float{padding:16px; right:16px; bottom:16px;}
   .nav-actions .btn{padding:10px 15px;}
-  .maqo-img{height:34px;}
+  .maqo-img{height:48px;}
   .res-long{flex-direction:column; gap:16px;}
 }
