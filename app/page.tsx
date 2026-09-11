@@ -53,15 +53,18 @@ const FAQS = [
 ];
 
 /*
- * MAQO wordmark: orange "maqo" over the green tagline.
- * To use the official artwork instead, drop the file in /public and swap the
- * body of this component for:
+ * MAQO wordmark: orange "maqo" over the green tagline, set in the geometric
+ * heading face so it matches the supplied artwork.
+ *
+ * To use the official artwork file instead, save it to /public and replace the
+ * inner markup with:
  *   <img src="/maqo-logo.png" alt="MAQO — Energizing a cleaner future" className="maqo-img" />
+ * The `.maqo-img` rule in globals.css already sizes it for header and footer.
  */
-function MaqoLogo({ compact = false }: { compact?: boolean }) {
+function MaqoLogo({ invert = false }: { invert?: boolean }) {
   return (
     <span
-      className={"maqo-logo" + (compact ? " compact" : "")}
+      className={"maqo-logo" + (invert ? " invert" : "")}
       role="img"
       aria-label="MAQO — Energizing a cleaner future"
     >
@@ -83,6 +86,112 @@ function WhatsAppIcon() {
   );
 }
 
+function ArrowIcon() {
+  return (
+    <svg
+      className="arrow"
+      viewBox="0 0 20 20"
+      width="16"
+      height="16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M4 10h12M11 5l5 5-5 5" />
+    </svg>
+  );
+}
+
+/* Line icons for the "what's covered" pillars. */
+const iconProps = {
+  viewBox: "0 0 32 32",
+  width: 30,
+  height: 30,
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: 1.6,
+  strokeLinecap: "round" as const,
+  strokeLinejoin: "round" as const,
+  "aria-hidden": true,
+};
+
+function IconPanel() {
+  return (
+    <svg {...iconProps}>
+      <path d="M6 6h20l3 14H3L6 6Z" />
+      <path d="M4.4 13h23.2M13 6l-1.5 14M19 6l1.5 14M16 20v6M11 26h10" />
+    </svg>
+  );
+}
+function IconInverter() {
+  return (
+    <svg {...iconProps}>
+      <rect x="5" y="4" width="22" height="24" rx="3" />
+      <path d="M17 9l-5 8h4l-1 6 5-8h-4l1-6Z" />
+      <path d="M9 24h4" />
+    </svg>
+  );
+}
+function IconBattery() {
+  return (
+    <svg {...iconProps}>
+      <rect x="3" y="9" width="23" height="14" rx="3" />
+      <path d="M29 14v4" />
+      <path d="M7 13v6M12 13v6M17 13v6" />
+    </svg>
+  );
+}
+function IconApp() {
+  return (
+    <svg {...iconProps}>
+      <rect x="9" y="3" width="14" height="26" rx="3" />
+      <path d="M13 21l3-5 3 3 4-7" />
+      <path d="M14 25.5h4" />
+    </svg>
+  );
+}
+function IconSupport() {
+  return (
+    <svg {...iconProps}>
+      <path d="M5 19v-4a11 11 0 0 1 22 0v4" />
+      <rect x="3" y="17" width="6" height="8" rx="2.5" />
+      <rect x="23" y="17" width="6" height="8" rx="2.5" />
+      <path d="M26 25v1a3 3 0 0 1-3 3h-4" />
+    </svg>
+  );
+}
+
+const PILLARS = [
+  {
+    icon: <IconPanel />,
+    title: "Solar panels",
+    body: "Tier-1 panels from AIKO, Huawei and FoxESS — sized for your EV load, not just the house.",
+  },
+  {
+    icon: <IconInverter />,
+    title: "Hybrid inverter",
+    body: "Handles simultaneous household use and EV charging draw without tripping your supply.",
+  },
+  {
+    icon: <IconBattery />,
+    title: "Optional battery",
+    body: "Store daytime solar so your car charges on your own power after dark.",
+  },
+  {
+    icon: <IconApp />,
+    title: "Real-time monitoring",
+    body: "See generation against charging consumption side by side, on your phone.",
+  },
+  {
+    icon: <IconSupport />,
+    title: "Dedicated support",
+    body: "One in-house team from SEDA approval all the way to your NEM meter.",
+  },
+];
+
 /* Hero illustration: rooftop solar array feeding a home EV charger. */
 function SolarEvScene() {
   return (
@@ -95,51 +204,49 @@ function SolarEvScene() {
     >
       <defs>
         <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#DCEBFB" />
-          <stop offset="100%" stopColor="#F6FAFF" />
+          <stop offset="0%" stopColor="#EAF4DC" />
+          <stop offset="100%" stopColor="#FDFEFB" />
         </linearGradient>
         <linearGradient id="panelFace" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#1D5FA8" />
-          <stop offset="100%" stopColor="#0B2A52" />
+          <stop offset="0%" stopColor="#254A34" />
+          <stop offset="100%" stopColor="#0E2116" />
         </linearGradient>
         <linearGradient id="carBody" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#F7FAFF" />
-          <stop offset="100%" stopColor="#D8E3F2" />
+          <stop offset="0%" stopColor="#FFFFFF" />
+          <stop offset="100%" stopColor="#DCE6D8" />
         </linearGradient>
       </defs>
 
-      <rect x="0" y="0" width="560" height="400" rx="14" fill="url(#sky)" />
+      <rect x="0" y="0" width="560" height="400" fill="url(#sky)" />
 
       {/* Sun */}
       <g className="sun">
-        <circle cx="468" cy="74" r="30" fill="#F5A623" opacity="0.18" />
-        <circle cx="468" cy="74" r="21" fill="#F5A623" />
-        <g stroke="#F5A623" strokeWidth="3" strokeLinecap="round" opacity="0.75">
-          <line x1="468" y1="34" x2="468" y2="44" />
-          <line x1="468" y1="104" x2="468" y2="114" />
-          <line x1="428" y1="74" x2="438" y2="74" />
-          <line x1="498" y1="74" x2="508" y2="74" />
-          <line x1="440" y1="46" x2="447" y2="53" />
-          <line x1="489" y1="95" x2="496" y2="102" />
-          <line x1="440" y1="102" x2="447" y2="95" />
-          <line x1="489" y1="53" x2="496" y2="46" />
+        <circle cx="468" cy="72" r="32" fill="#F5901E" opacity="0.16" />
+        <circle cx="468" cy="72" r="21" fill="#F5901E" />
+        <g stroke="#F5901E" strokeWidth="3" strokeLinecap="round" opacity="0.8">
+          <line x1="468" y1="32" x2="468" y2="42" />
+          <line x1="468" y1="102" x2="468" y2="112" />
+          <line x1="428" y1="72" x2="438" y2="72" />
+          <line x1="498" y1="72" x2="508" y2="72" />
+          <line x1="440" y1="44" x2="447" y2="51" />
+          <line x1="489" y1="93" x2="496" y2="100" />
+          <line x1="440" y1="100" x2="447" y2="93" />
+          <line x1="489" y1="51" x2="496" y2="44" />
         </g>
       </g>
 
-      {/* Ground */}
-      <rect x="0" y="330" width="560" height="70" fill="#E7EDF6" />
-      <rect x="0" y="330" width="560" height="3" fill="#D5DEEB" />
-      {/* Driveway */}
-      <path d="M300,330 L560,330 L560,400 L262,400 Z" fill="#DCE4EF" />
+      {/* Ground + driveway */}
+      <rect x="0" y="330" width="560" height="70" fill="#E4EDDC" />
+      <rect x="0" y="330" width="560" height="2.5" fill="#CFDCC4" />
+      <path d="M300,330 L560,330 L560,400 L262,400 Z" fill="#DAE4D1" />
 
       {/* House */}
       <path d="M78,215 L302,150 L302,330 L78,330 Z" fill="#FFFFFF" />
-      <path d="M78,215 L302,150 L302,330 L78,330 Z" fill="none" stroke="#CBD6E5" strokeWidth="2" />
-      {/* Roof slab */}
-      <path d="M62,205 L306,134 L318,155 L74,226 Z" fill="#0B2A52" opacity="0.85" />
+      <path d="M78,215 L302,150 L302,330 L78,330 Z" fill="none" stroke="#CFDCC4" strokeWidth="2" />
+      <path d="M62,205 L306,134 L318,155 L74,226 Z" fill="#152A1D" />
 
       {/* Solar array */}
-      <g stroke="#4E8CD1" strokeWidth="1.2">
+      <g stroke="#7DB928" strokeWidth="1.2" strokeOpacity="0.6">
         <path d="M72,192 L107,182 L114,207 L79,217 Z" fill="url(#panelFace)" />
         <path d="M110,181 L145,171 L152,196 L117,206 Z" fill="url(#panelFace)" />
         <path d="M148,170 L183,160 L190,185 L155,195 Z" fill="url(#panelFace)" />
@@ -147,32 +254,27 @@ function SolarEvScene() {
         <path d="M224,148 L259,138 L266,163 L231,173 Z" fill="url(#panelFace)" />
         <path d="M262,137 L297,127 L304,152 L269,162 Z" fill="url(#panelFace)" />
       </g>
-      {/* Panel glare */}
-      <path d="M72,192 L297,127 L300,138 L75,203 Z" fill="#FFFFFF" opacity="0.16" />
+      <path d="M72,192 L297,127 L300,138 L75,203 Z" fill="#F5901E" opacity="0.22" />
 
       {/* Windows + door */}
-      <rect x="104" y="248" width="46" height="38" rx="4" fill="#EAF2FB" stroke="#CBD6E5" strokeWidth="2" />
-      <line x1="127" y1="248" x2="127" y2="286" stroke="#CBD6E5" strokeWidth="2" />
-      <rect x="172" y="248" width="46" height="38" rx="4" fill="#EAF2FB" stroke="#CBD6E5" strokeWidth="2" />
-      <line x1="195" y1="248" x2="195" y2="286" stroke="#CBD6E5" strokeWidth="2" />
-      <rect x="242" y="252" width="42" height="78" rx="4" fill="#EAF2FB" stroke="#CBD6E5" strokeWidth="2" />
-      <circle cx="276" cy="292" r="3" fill="#8A94A6" />
+      <rect x="104" y="248" width="46" height="38" rx="4" fill="#EDF5E3" stroke="#CFDCC4" strokeWidth="2" />
+      <line x1="127" y1="248" x2="127" y2="286" stroke="#CFDCC4" strokeWidth="2" />
+      <rect x="172" y="248" width="46" height="38" rx="4" fill="#EDF5E3" stroke="#CFDCC4" strokeWidth="2" />
+      <line x1="195" y1="248" x2="195" y2="286" stroke="#CFDCC4" strokeWidth="2" />
+      <rect x="242" y="252" width="42" height="78" rx="4" fill="#EDF5E3" stroke="#CFDCC4" strokeWidth="2" />
+      <circle cx="276" cy="292" r="3" fill="#7DB928" />
 
       {/* Wall charger */}
-      <rect x="306" y="232" width="28" height="46" rx="7" fill="#0F8C7C" />
+      <rect x="306" y="232" width="28" height="46" rx="8" fill="#7DB928" />
       <path d="M322,244 L313,258 L319,258 L316,268 L325,254 L319,254 Z" fill="#FFFFFF" />
-      <circle className="charger-led" cx="320" cy="273" r="2.6" fill="#C8F5D8" />
+      <circle className="charger-led" cx="320" cy="273" r="2.6" fill="#F2FFDD" />
 
       {/* Charging cable */}
-      <path
-        id="cablePath"
-        className="cable"
-        d="M334,262 C356,282 344,314 372,306"
-      />
-      <circle className="charge-dot" r="4.5" fill="#7DB928">
+      <path className="cable" d="M334,262 C356,282 344,314 372,306" />
+      <circle r="4.5" fill="#7DB928">
         <animateMotion dur="2.4s" repeatCount="indefinite" path="M334,262 C356,282 344,314 372,306" />
       </circle>
-      <circle className="charge-dot" r="4.5" fill="#F5A623" opacity="0.8">
+      <circle r="4.5" fill="#F5901E">
         <animateMotion dur="2.4s" begin="1.2s" repeatCount="indefinite" path="M334,262 C356,282 344,314 372,306" />
       </circle>
 
@@ -181,36 +283,29 @@ function SolarEvScene() {
         <path
           d="M368,332 L368,308 Q369,298 382,294 L406,286 Q426,262 456,262 L480,262 Q502,264 514,286 L530,294 Q540,298 540,310 L540,332 Z"
           fill="url(#carBody)"
-          stroke="#B9C7DA"
+          stroke="#BCCDB2"
           strokeWidth="2"
         />
-        <path
-          d="M410,288 Q428,270 456,270 L478,270 Q498,272 508,288 Z"
-          fill="#0B2A52"
-          opacity="0.82"
-        />
-        <line x1="456" y1="270" x2="456" y2="288" stroke="#B9C7DA" strokeWidth="2" />
-        {/* Charge port */}
-        <circle cx="375" cy="304" r="6" fill="#0F8C7C" />
+        <path d="M410,288 Q428,270 456,270 L478,270 Q498,272 508,288 Z" fill="#152A1D" />
+        <line x1="456" y1="270" x2="456" y2="288" stroke="#BCCDB2" strokeWidth="2" />
+        <circle cx="375" cy="304" r="6" fill="#7DB928" />
         <circle cx="375" cy="304" r="2.2" fill="#FFFFFF" />
-        {/* Lights */}
-        <rect x="533" y="300" width="8" height="7" rx="3" fill="#F5A623" />
-        {/* Wheels */}
-        <circle cx="404" cy="332" r="19" fill="#1B2536" />
-        <circle cx="404" cy="332" r="8" fill="#C7D2E1" />
-        <circle cx="506" cy="332" r="19" fill="#1B2536" />
-        <circle cx="506" cy="332" r="8" fill="#C7D2E1" />
+        <rect x="533" y="300" width="8" height="7" rx="3" fill="#F5901E" />
+        <circle cx="404" cy="332" r="19" fill="#152A1D" />
+        <circle cx="404" cy="332" r="8" fill="#CBD9C2" />
+        <circle cx="506" cy="332" r="19" fill="#152A1D" />
+        <circle cx="506" cy="332" r="8" fill="#CBD9C2" />
       </g>
 
-      {/* Battery badge */}
-      <g className="ev-badge">
-        <rect x="404" y="212" width="112" height="34" rx="17" fill="#FFFFFF" stroke="#D7E2F0" strokeWidth="1.5" />
-        <rect x="418" y="223" width="22" height="12" rx="3" fill="none" stroke="#7DB928" strokeWidth="2" />
-        <rect x="441" y="226" width="3" height="6" rx="1.5" fill="#7DB928" />
-        <rect x="420" y="225" width="18" height="8" rx="1.5" fill="#7DB928">
+      {/* Charging badge */}
+      <g>
+        <rect x="404" y="208" width="116" height="36" rx="18" fill="#FFFFFF" stroke="#DDE7D5" strokeWidth="1.5" />
+        <rect x="419" y="220" width="22" height="12" rx="3" fill="none" stroke="#7DB928" strokeWidth="2" />
+        <rect x="442" y="223" width="3" height="6" rx="1.5" fill="#7DB928" />
+        <rect x="421" y="222" width="18" height="8" rx="1.5" fill="#7DB928">
           <animate attributeName="width" values="4;18;18" dur="2.4s" repeatCount="indefinite" />
         </rect>
-        <text x="452" y="234" className="ev-badge-text">
+        <text x="453" y="231" className="ev-badge-text">
           Charging
         </text>
       </g>
@@ -225,7 +320,6 @@ function ElectronFlow() {
       <h4>Where your EV&apos;s electrons come from</h4>
       <svg viewBox="0 0 320 220" width="100%" height="220" aria-hidden="true">
         <path
-          id="flowPath"
           className="flow-path"
           d="M40,40 C120,40 100,110 160,110 C220,110 200,180 280,180"
         />
@@ -297,12 +391,19 @@ export default function Page() {
           <a className="brand" href="#top" aria-label="MAQO home">
             <MaqoLogo />
           </a>
+          <nav className="nav-links">
+            <a href="#the-problem">The problem</a>
+            <a href="#calculator">Savings</a>
+            <a href="#how-it-works">How it works</a>
+            <a href="#covered">What&apos;s covered</a>
+            <a href="#faq">FAQ</a>
+          </nav>
           <div className="nav-actions">
             <a className="btn btn-whatsapp" href="https://wa.me/60123220816">
               <WhatsAppIcon />
               <span>WhatsApp Us</span>
             </a>
-            <a className="btn btn-amber" href="#assessment">
+            <a className="btn btn-primary" href="#assessment">
               Free Assessment
             </a>
           </div>
@@ -312,64 +413,99 @@ export default function Page() {
       <main id="top">
         {/* HERO */}
         <section className="hero">
+          <span className="hero-blob hero-blob-a" aria-hidden="true" />
+          <span className="hero-blob hero-blob-b" aria-hidden="true" />
           <div className="wrap hero-grid">
-            <div>
+            <div className="hero-copy">
               <div className="hero-badge">
                 <span className="hero-badge-dot" />
                 MAQO ATAP · Built for EV-owning homes
               </div>
               <h1>
-                Charge Your EV On <span className="hl">Free Sunlight</span> —
-                Not On TNB!
+                Charge Your EV On <span className="hl">Sunlight</span>.
+                <br />
+                Not On <span className="strike">TNB</span>.
               </h1>
               <p className="lede">
-                Your car already runs on electricity. Put solar on your roof
-                under NEM and your driveway becomes your own fuel station —
-                up to <b>90% off your TNB bill</b>, installed by an ST Class A
-                &amp; CIDB G7-certified team.
+                Your car already runs on electricity — the only question is who
+                sells it to you. Put solar on your roof under NEM and your
+                driveway becomes your own fuel station, cutting up to{" "}
+                <b>90% off your TNB bill</b>.
               </p>
               <div className="hero-ctas">
-                <a className="btn btn-amber btn-lg" href="#assessment">
+                <a className="btn btn-primary btn-lg" href="#assessment">
                   Get My Free Assessment
+                  <ArrowIcon />
                 </a>
-                <a className="btn btn-ghost btn-lg" href="#calculator">
+                <a className="btn btn-outline btn-lg" href="#calculator">
                   See My Savings
                 </a>
               </div>
-              <div className="hero-stats">
-                <div className="stat">
-                  <b>90%</b>
-                  <span>Max TNB bill reduction</span>
-                </div>
-                <ul className="hero-trust">
-                  <li>ST Class A</li>
-                  <li>CIDB G7</li>
-                  <li>SEDA Registered</li>
-                  <li>ISO 9001:2015</li>
-                </ul>
-              </div>
+              <ul className="hero-trust">
+                <li>ST Class A</li>
+                <li>CIDB G7</li>
+                <li>SEDA Registered</li>
+                <li>ISO 9001:2015</li>
+              </ul>
             </div>
 
             <div className="hero-visual">
-              <SolarEvScene />
+              <div className="hero-visual-frame">
+                <SolarEvScene />
+              </div>
+              <div className="hero-chip">
+                <span className="hero-chip-label">Typical bill after solar</span>
+                <span className="hero-chip-value">
+                  RM 612 <ArrowIcon /> <b>RM 78</b>
+                </span>
+              </div>
             </div>
           </div>
         </section>
 
-        <hr className="divider" />
+        {/* CREDENTIAL BAND */}
+        <section className="band">
+          <div className="wrap band-grid">
+            <div className="band-item">
+              <b>90%</b>
+              <span>Maximum TNB bill reduction</span>
+            </div>
+            <div className="band-item">
+              <b>Class A</b>
+              <span>Suruhanjaya Tenaga contractor licence</span>
+            </div>
+            <div className="band-item">
+              <b>G7</b>
+              <span>Highest CIDB contractor grade</span>
+            </div>
+            <div className="band-item">
+              <b>ISO 9001</b>
+              <span>:2015 quality-managed installation</span>
+            </div>
+          </div>
+        </section>
 
         {/* PROBLEM */}
         <section id="the-problem">
-          <div className="wrap">
-            <div className="section-head">
-              <div className="eyebrow">The EV tax on your TNB bill</div>
-              <h2>Home charging is the single biggest jump on an EV owner&apos;s bill</h2>
+          <div className="wrap split">
+            <div className="split-copy">
+              <span className="eyebrow">
+                <i />
+                The EV tax on your bill
+              </span>
+              <h2>
+                Home charging is the biggest jump an EV owner ever sees on a
+                TNB bill
+              </h2>
               <p>
-                A typical EV adds 150–300 kWh of home charging a month on top
-                of normal household use — usually pushing families into
-                TNB&apos;s highest tiered rate. Solar offsets exactly that
-                extra load.
+                A typical EV adds 150–300 kWh of home charging a month on top of
+                normal household use — usually pushing families into TNB&apos;s
+                highest tiered rate. Solar offsets exactly that extra load.
               </p>
+              <a className="link-arrow" href="#calculator">
+                Estimate your own numbers
+                <ArrowIcon />
+              </a>
             </div>
             <div className="compare">
               <div className="bill-card before">
@@ -379,7 +515,7 @@ export default function Page() {
                   <span className="bill-bar-fill" />
                 </div>
                 <p className="bill-note">
-                  Household use + nightly EV charging, billed at TNB&apos;s
+                  Household use plus nightly EV charging, billed at TNB&apos;s
                   tiered peak rate.
                 </p>
               </div>
@@ -394,10 +530,10 @@ export default function Page() {
                   charging at night.
                 </p>
               </div>
-              <div className="compare-arrow">
+              <p className="compare-note">
                 Illustrative example, based on a 14 kWp system sized for an EV
-                household →
-              </div>
+                household.
+              </p>
             </div>
           </div>
         </section>
@@ -406,12 +542,15 @@ export default function Page() {
         <section id="calculator" className="alt-bg">
           <div className="wrap">
             <div className="section-head">
-              <div className="eyebrow">Solar + EV calculator</div>
+              <span className="eyebrow">
+                <i />
+                Solar + EV calculator
+              </span>
               <h2>Size a system around your car, not just your house</h2>
               <p>
                 Tell us your current TNB bill and when you usually charge at
-                home. We&apos;ll estimate the system size and what
-                you&apos;d save.
+                home. We&apos;ll estimate the system size and what you&apos;d
+                save.
               </p>
             </div>
             <div className="calc-panel">
@@ -454,7 +593,10 @@ export default function Page() {
                 </div>
               </div>
               <div className="calc-results">
-                <h4>Based on RM{bill}/month, charging {selected.label.toLowerCase()}</h4>
+                <h4>
+                  Based on RM{bill}/month, charging{" "}
+                  {selected.label.toLowerCase()}
+                </h4>
                 <p className="calc-note">{selected.note}</p>
                 <div className="res-grid">
                   <div className="res-item">
@@ -484,26 +626,28 @@ export default function Page() {
                     <span>Saved over 30 years</span>
                   </div>
                 </div>
-                <a className="btn btn-blue" href="#assessment" style={{ marginTop: 22 }}>
+                <a className="btn btn-primary" href="#assessment">
                   Get My Exact ROI
+                  <ArrowIcon />
                 </a>
                 <p className="calc-disclaimer">
-                  Estimate only. Actual system size, savings and pricing
-                  depend on real consumption, charger schedule, roof space,
-                  shading and a full site assessment.
+                  Estimate only. Actual system size, savings and pricing depend
+                  on real consumption, charger schedule, roof space, shading and
+                  a full site assessment.
                 </p>
               </div>
             </div>
           </div>
         </section>
 
-        <hr className="divider" />
-
         {/* HOW IT WORKS */}
         <section id="how-it-works">
           <div className="wrap">
             <div className="section-head">
-              <div className="eyebrow">How it works</div>
+              <span className="eyebrow">
+                <i />
+                How it works
+              </span>
               <h2>From TNB bill to charging on sunlight</h2>
             </div>
             <div className="how-grid">
@@ -568,91 +712,119 @@ export default function Page() {
           </div>
         </section>
 
-        <hr className="divider" />
-
-        {/* INCLUDED */}
-        <section id="included">
+        {/* WHAT'S COVERED */}
+        <section id="covered" className="alt-bg">
           <div className="wrap">
             <div className="section-head">
-              <div className="eyebrow">What&apos;s covered</div>
+              <span className="eyebrow">
+                <i />
+                What&apos;s covered
+              </span>
               <h2>Everything an EV household needs</h2>
+              <p>
+                One scope, one in-house team, one point of contact — from the
+                first roof measurement to the day your meter is swapped.
+              </p>
             </div>
-            <div className="included">
-              <div>
-                <b>Solar panels</b>
-                <span>Tier-1 panels from AIKO, Huawei, FoxESS — sized for EV load.</span>
-              </div>
-              <div>
-                <b>Hybrid inverter</b>
-                <span>Handles simultaneous home use and EV charging draw.</span>
-              </div>
-              <div>
-                <b>Optional battery</b>
-                <span>Store daytime solar for night-time charging.</span>
-              </div>
-              <div>
-                <b>Real-time monitoring app</b>
-                <span>See generation vs. charging consumption side by side.</span>
-              </div>
-              <div>
-                <b>Dedicated support</b>
-                <span>One team from SEDA approval to NEM meter.</span>
-              </div>
+            <div className="pillars">
+              {PILLARS.map((p) => (
+                <article className="pillar" key={p.title}>
+                  <span className="pillar-icon">{p.icon}</span>
+                  <h3>{p.title}</h3>
+                  <p>{p.body}</p>
+                </article>
+              ))}
+              <article className="pillar pillar-cta">
+                <h3>Not sure what you need?</h3>
+                <p>
+                  Our ATAP team specs it around your roof, your bill and your
+                  charging pattern — at no cost.
+                </p>
+                <a className="link-arrow" href="#assessment">
+                  Book a free assessment
+                  <ArrowIcon />
+                </a>
+              </article>
             </div>
           </div>
         </section>
 
-        <hr className="divider" />
-
         {/* TESTIMONIALS */}
-        <section id="stories" className="alt-bg">
+        <section id="stories">
           <div className="wrap">
             <div className="section-head">
-              <div className="eyebrow">EV owners on ATAP</div>
+              <span className="eyebrow">
+                <i />
+                EV owners on ATAP
+              </span>
               <h2>Households already charging on their own power</h2>
             </div>
             <div className="testimonials">
               <div className="tcard">
-                <span className="ev-tag">EV owner · Subang Jaya</span>
+                <span className="quote-mark" aria-hidden="true">
+                  &ldquo;
+                </span>
                 <p>
-                  &ldquo;Our bill used to spike every month once we started
-                  charging at home. Since the panels went up, most of that
-                  charging is basically free during the day.&rdquo;
+                  Our bill used to spike every month once we started charging at
+                  home. Since the panels went up, most of that charging is
+                  basically free during the day.
                 </p>
-                <footer>Residential ATAP customer</footer>
+                <footer>
+                  <b>Residential ATAP customer</b>
+                  <span>EV owner · Subang Jaya</span>
+                </footer>
               </div>
               <div className="tcard">
-                <span className="ev-tag">EV owner · Shah Alam</span>
+                <span className="quote-mark" aria-hidden="true">
+                  &ldquo;
+                </span>
                 <p>
-                  &ldquo;The team asked about our charger and driving pattern
-                  before sizing anything — it wasn&apos;t a generic package,
-                  it was built around how much we actually charge.&rdquo;
+                  The team asked about our charger and driving pattern before
+                  sizing anything — it wasn&apos;t a generic package, it was
+                  built around how much we actually charge.
                 </p>
-                <footer>Residential ATAP customer</footer>
+                <footer>
+                  <b>Residential ATAP customer</b>
+                  <span>EV owner · Shah Alam</span>
+                </footer>
               </div>
               <div className="tcard">
-                <span className="ev-tag">EV owner · Kajang</span>
+                <span className="quote-mark" aria-hidden="true">
+                  &ldquo;
+                </span>
                 <p>
-                  &ldquo;With the battery add-on we charge overnight from
-                  stored solar instead of the grid. The app makes it easy to
-                  see exactly how much we&apos;re offsetting.&rdquo;
+                  With the battery add-on we charge overnight from stored solar
+                  instead of the grid. The app makes it easy to see exactly how
+                  much we&apos;re offsetting.
                 </p>
-                <footer>Residential ATAP customer</footer>
+                <footer>
+                  <b>Residential ATAP customer</b>
+                  <span>EV owner · Kajang</span>
+                </footer>
               </div>
             </div>
           </div>
         </section>
 
-        <hr className="divider" />
-
         {/* FAQ */}
-        <section id="faq">
-          <div className="wrap">
+        <section id="faq" className="alt-bg">
+          <div className="wrap faq-grid">
             <div className="section-head">
-              <div className="eyebrow">FAQ</div>
+              <span className="eyebrow">
+                <i />
+                FAQ
+              </span>
               <h2>What EV owners ask us</h2>
+              <p>
+                Still unsure about something? Message us and a real engineer
+                answers.
+              </p>
+              <a className="btn btn-whatsapp" href="https://wa.me/60123220816">
+                <WhatsAppIcon />
+                <span>WhatsApp Us</span>
+              </a>
             </div>
-            <div id="faqList">
+            <div className="faq-list">
               {FAQS.map((item, i) => (
                 <div
                   key={item.q}
@@ -668,7 +840,7 @@ export default function Page() {
                   </button>
                   <div
                     className="faq-a"
-                    style={{ maxHeight: openFaq === i ? 240 : 0 }}
+                    style={{ maxHeight: openFaq === i ? 260 : 0 }}
                   >
                     <p>{item.a}</p>
                   </div>
@@ -681,13 +853,16 @@ export default function Page() {
 
       {/* FORM */}
       <section className="form-section" id="assessment">
-        <div className="wrap form-grid" style={{ padding: "64px 0" }}>
-          <div>
-            <div className="eyebrow">Free home assessment</div>
+        <div className="wrap form-grid">
+          <div className="form-intro">
+            <span className="eyebrow light">
+              <i />
+              Free home assessment
+            </span>
             <h2>See what solar does to your TNB bill</h2>
             <p>
-              Takes about 60 seconds. Our ATAP team calls you within 1
-              business day with a system sized around your home and your EV.
+              Takes about 60 seconds. Our ATAP team calls you within 1 business
+              day with a system sized around your home and your EV.
             </p>
             <ul className="form-points">
               <li>No obligation, no hidden costs on your quote</li>
@@ -696,7 +871,7 @@ export default function Page() {
             </ul>
             <a className="btn btn-whatsapp" href="https://wa.me/60123220816">
               <WhatsAppIcon />
-              WhatsApp Us
+              <span>WhatsApp Us</span>
             </a>
           </div>
           <form onSubmit={handleSubmit}>
@@ -784,16 +959,13 @@ export default function Page() {
                 </select>
               </div>
             </div>
-            <button
-              type="submit"
-              className="btn btn-amber"
-              style={{ width: "100%", justifyContent: "center" }}
-            >
+            <button type="submit" className="btn btn-primary btn-block">
               {submitted ? "Request received" : "Get My Free Home Assessment"}
+              {!submitted && <ArrowIcon />}
             </button>
             <p className="form-legal">
-              By submitting, you agree to be contacted by MAQO Engineering
-              Sdn Bhd about your solar assessment. No spam.
+              By submitting, you agree to be contacted by MAQO Engineering Sdn
+              Bhd about your solar assessment. No spam.
             </p>
             {submitted && (
               <p className="submit-note show">
@@ -808,30 +980,41 @@ export default function Page() {
         <div className="wrap">
           <div className="foot-grid">
             <div className="foot-brand">
-              <MaqoLogo />
+              <MaqoLogo invert />
               <p>
-                MAQO Engineering Sdn Bhd — one solar panel, one battery, one
-                EV charged at a time.
+                MAQO Engineering Sdn Bhd — one solar panel, one battery, one EV
+                charged at a time.
               </p>
-              <p style={{ marginTop: 10, color: "var(--ink-faint)" }}>
-                ST Class A · CIDB G7 · SEDA Registered · ISO 9001:2015
-              </p>
+              <ul className="foot-certs">
+                <li>ST Class A</li>
+                <li>CIDB G7</li>
+                <li>SEDA Registered</li>
+                <li>ISO 9001:2015</li>
+              </ul>
             </div>
-            <div className="foot-contact">
-              Email: admin@maqo.asia
-              <br />
-              Office: 603-8069 1706
-              <br />
-              WhatsApp: <a href="https://wa.me/60187771095">6018-777 1095</a>
-              <br />
-              27, Jalan TPP 1/1, Taman Perindustrian Puchong, 47100 Puchong,
-              Selangor
+            <div className="foot-col">
+              <h5>Explore</h5>
+              <a href="#the-problem">The problem</a>
+              <a href="#calculator">Savings calculator</a>
+              <a href="#how-it-works">How it works</a>
+              <a href="#covered">What&apos;s covered</a>
+              <a href="#faq">FAQ</a>
+            </div>
+            <div className="foot-col">
+              <h5>Contact</h5>
+              <a href="mailto:admin@maqo.asia">admin@maqo.asia</a>
+              <a href="tel:60380691706">603-8069 1706</a>
+              <a href="https://wa.me/60187771095">WhatsApp 6018-777 1095</a>
+              <p>
+                27, Jalan TPP 1/1, Taman Perindustrian Puchong, 47100 Puchong,
+                Selangor
+              </p>
             </div>
           </div>
           <div className="foot-bottom">
             <span>
-              © 2026 MAQO Engineering Sdn Bhd (MAQO Solar / MAQO
-              Technologies). All rights reserved.
+              © 2026 MAQO Engineering Sdn Bhd (MAQO Solar / MAQO Technologies).
+              All rights reserved.
             </span>
             <span>Suruhanjaya Tenaga · SEDA · CIDB G7</span>
           </div>
