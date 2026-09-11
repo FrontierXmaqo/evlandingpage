@@ -389,11 +389,13 @@ export default function Page() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          salutation: data.get("fsalutation"),
           fullName: data.get("fname"),
           phone: data.get("fphone"),
           email: data.get("femail"),
           state: data.get("fstate"),
           monthlyBill: data.get("fbill"),
+          electricSupply: data.get("felectric"),
           chargeTime: data.get("fev"),
           propertyType: data.get("fprop"),
           language: data.get("flang"),
@@ -916,21 +918,37 @@ export default function Page() {
                 autoComplete="off"
               />
             </div>
-            <div className="form-row">
+            <div className="form-row form-row-name">
+              <div className="field">
+                <label htmlFor="fsalutation">Title</label>
+                <select id="fsalutation" name="fsalutation" defaultValue="" disabled={submitting}>
+                  <option value="">—</option>
+                  <option>Mr</option>
+                  <option>Mrs</option>
+                  <option>Ms</option>
+                  <option>Dr.</option>
+                  <option>Datin</option>
+                  <option>Dato&apos;</option>
+                  <option>Dato&apos; Sri</option>
+                  <option>Tun</option>
+                </select>
+              </div>
               <div className="field">
                 <label htmlFor="fname">Full name *</label>
                 <input id="fname" name="fname" required disabled={submitting} />
               </div>
+            </div>
+            <div className="form-row">
               <div className="field">
                 <label htmlFor="fphone">Mobile / WhatsApp *</label>
                 <input id="fphone" name="fphone" required disabled={submitting} />
               </div>
-            </div>
-            <div className="form-row">
               <div className="field">
                 <label htmlFor="femail">Email</label>
                 <input id="femail" name="femail" type="email" disabled={submitting} />
               </div>
+            </div>
+            <div className="form-row">
               <div className="field">
                 <label htmlFor="fstate">State *</label>
                 <select id="fstate" name="fstate" required defaultValue="" disabled={submitting}>
@@ -950,6 +968,18 @@ export default function Page() {
                   <option>Other</option>
                 </select>
               </div>
+              <div className="field">
+                <label htmlFor="fprop">Property type *</label>
+                <select id="fprop" name="fprop" required defaultValue="" disabled={submitting}>
+                  <option value="" disabled>
+                    Select type
+                  </option>
+                  <option>Terrace / Link house</option>
+                  <option>Semi-detached</option>
+                  <option>Bungalow</option>
+                  <option>Apartment / Condo (landed access)</option>
+                </select>
+              </div>
             </div>
             <div className="form-row">
               <div className="field">
@@ -966,31 +996,15 @@ export default function Page() {
                 </select>
               </div>
               <div className="field">
-                <label htmlFor="fev">When do you usually charge? *</label>
-                <select id="fev" name="fev" required defaultValue="" disabled={submitting}>
-                  <option value="" disabled>
-                    Select option
-                  </option>
-                  <option>Mostly during the day</option>
-                  <option>Mostly at night</option>
-                  <option>Mixed / it varies</option>
-                  <option>Planning to buy an EV soon</option>
+                <label htmlFor="felectric">Electric supply</label>
+                <select id="felectric" name="felectric" defaultValue="" disabled={submitting}>
+                  <option value="">—</option>
+                  <option>Single Phase</option>
+                  <option>Three Phase</option>
+                  <option>Unsure</option>
                 </select>
               </div>
             </div>
-            <div className="form-row">
-              <div className="field">
-                <label htmlFor="fprop">Property type *</label>
-                <select id="fprop" name="fprop" required defaultValue="" disabled={submitting}>
-                  <option value="" disabled>
-                    Select type
-                  </option>
-                  <option>Terrace / Link house</option>
-                  <option>Semi-detached</option>
-                  <option>Bungalow</option>
-                  <option>Apartment / Condo (landed access)</option>
-                </select>
-              </div>
               <div className="field">
                 <label htmlFor="flang">Preferred language</label>
                 <select id="flang" name="flang" defaultValue="English" disabled={submitting}>

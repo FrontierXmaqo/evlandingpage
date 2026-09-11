@@ -390,6 +390,7 @@ section{padding:96px 0;}
 .form-points li::before{content:"✓"; color:var(--green); font-weight:700;}
 form{background:var(--paper); border-radius:var(--r-lg); padding:34px; box-shadow:var(--shadow-lg);}
 .form-row{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.form-row-name{grid-template-columns:112px 1fr;}
 form .field{margin-bottom:16px;}
 form input, form select{
   width:100%; background:var(--paper); border:1.5px solid var(--line); color:var(--text);
