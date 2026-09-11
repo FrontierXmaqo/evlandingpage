@@ -53,15 +53,11 @@ const FAQS = [
   },
 ];
 
-/*
- * MAQO wordmark, rendered from the logo artwork at /public/maqo-logo.svg
- * (swap that file for the official export whenever you have it — the
- * component and its sizing stay the same).
- */
+/* MAQO wordmark, rendered from the official artwork at /public/Maqo Solar_Logo.svg */
 function MaqoLogo({ invert = false }: { invert?: boolean }) {
   return (
     <Image
-      src="/evlandingpage/public/Maqo Solar_Logo.svg"
+      src="/Maqo Solar_Logo.svg"
       alt="MAQO — Energizing a cleaner future"
       width={572}
       height={176}
@@ -352,6 +348,8 @@ export default function Page() {
   const [chargeTime, setChargeTime] = useState<ChargeTime>("night");
   const [openFaq, setOpenFaq] = useState<number>(0);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const selected = CHARGE_OPTIONS.find((c) => c.key === chargeTime)!;
 
@@ -371,10 +369,49 @@ export default function Page() {
     };
   }, [bill, selected]);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setSubmitted(true);
-    // TODO: wire this into your submitLead Server Action / Supabase insert.
+    setSubmitError(null);
+
+    const form = e.currentTarget;
+    const data = new FormData(form);
+
+    // Honeypot: real visitors never fill this hidden field. If it's
+    // populated, silently "succeed" without hitting the API or the webhook.
+    if ((data.get("company") as string)?.trim()) {
+      setSubmitted(true);
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: data.get("fname"),
+          phone: data.get("fphone"),
+          email: data.get("femail"),
+          state: data.get("fstate"),
+          monthlyBill: data.get("fbill"),
+          chargeTime: data.get("fev"),
+          propertyType: data.get("fprop"),
+          language: data.get("flang"),
+          pageUrl: window.location.href,
+          referrer: document.referrer || "",
+        }),
+      });
+
+      if (!res.ok) throw new Error("submit_failed");
+      setSubmitted(true);
+      form.reset();
+    } catch {
+      setSubmitError(
+        "Something went wrong sending your request. Please WhatsApp us instead — we'll get it sorted right away."
+      );
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -392,7 +429,7 @@ export default function Page() {
             <a href="#faq">FAQ</a>
           </nav>
           <div className="nav-actions">
-            <a className="btn btn-whatsapp" href="https://wa.me/60123220816">
+            <a className="btn btn-whatsapp" href="https://wa.me/60187771095">
               <WhatsAppIcon />
               <span>WhatsApp Us</span>
             </a>
@@ -620,7 +657,7 @@ export default function Page() {
                   </div>
                 </div>
                 <a className="btn btn-primary" href="#assessment">
-                  Get My Exact ROI
+                  Send me my report and give me my quotation
                   <ArrowIcon />
                 </a>
                 <p className="calc-disclaimer">
@@ -812,7 +849,7 @@ export default function Page() {
                 Still unsure about something? Message us and a real engineer
                 answers.
               </p>
-              <a className="btn btn-whatsapp" href="https://wa.me/60123220816">
+              <a className="btn btn-whatsapp" href="https://wa.me/60187771095">
                 <WhatsAppIcon />
                 <span>WhatsApp Us</span>
               </a>
@@ -862,30 +899,41 @@ export default function Page() {
               <li>We handle your TNB NEM / ATAP application</li>
               <li>Sized around your actual EV charging pattern</li>
             </ul>
-            <a className="btn btn-whatsapp" href="https://wa.me/60123220816">
+            <a className="btn btn-whatsapp" href="https://wa.me/60187771095">
               <WhatsAppIcon />
               <span>WhatsApp Us</span>
             </a>
           </div>
           <form onSubmit={handleSubmit}>
+            {/* Honeypot — hidden from real visitors, bots tend to fill every field. */}
+            <div className="hp-field" aria-hidden="true">
+              <label htmlFor="company">Company</label>
+              <input
+                id="company"
+                name="company"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </div>
             <div className="form-row">
               <div className="field">
                 <label htmlFor="fname">Full name *</label>
-                <input id="fname" required />
+                <input id="fname" name="fname" required disabled={submitting} />
               </div>
               <div className="field">
                 <label htmlFor="fphone">Mobile / WhatsApp *</label>
-                <input id="fphone" required />
+                <input id="fphone" name="fphone" required disabled={submitting} />
               </div>
             </div>
             <div className="form-row">
               <div className="field">
                 <label htmlFor="femail">Email</label>
-                <input id="femail" type="email" />
+                <input id="femail" name="femail" type="email" disabled={submitting} />
               </div>
               <div className="field">
                 <label htmlFor="fstate">State *</label>
-                <select id="fstate" required defaultValue="">
+                <select id="fstate" name="fstate" required defaultValue="" disabled={submitting}>
                   <option value="" disabled>
                     Select state
                   </option>
@@ -906,7 +954,7 @@ export default function Page() {
             <div className="form-row">
               <div className="field">
                 <label htmlFor="fbill">Average monthly TNB bill *</label>
-                <select id="fbill" required defaultValue="">
+                <select id="fbill" name="fbill" required defaultValue="" disabled={submitting}>
                   <option value="" disabled>
                     Select range
                   </option>
@@ -919,7 +967,7 @@ export default function Page() {
               </div>
               <div className="field">
                 <label htmlFor="fev">When do you usually charge? *</label>
-                <select id="fev" required defaultValue="">
+                <select id="fev" name="fev" required defaultValue="" disabled={submitting}>
                   <option value="" disabled>
                     Select option
                   </option>
@@ -933,7 +981,7 @@ export default function Page() {
             <div className="form-row">
               <div className="field">
                 <label htmlFor="fprop">Property type *</label>
-                <select id="fprop" required defaultValue="">
+                <select id="fprop" name="fprop" required defaultValue="" disabled={submitting}>
                   <option value="" disabled>
                     Select type
                   </option>
@@ -945,21 +993,30 @@ export default function Page() {
               </div>
               <div className="field">
                 <label htmlFor="flang">Preferred language</label>
-                <select id="flang" defaultValue="English">
+                <select id="flang" name="flang" defaultValue="English" disabled={submitting}>
                   <option>English</option>
                   <option>Chinese</option>
                   <option>Malay</option>
                 </select>
               </div>
             </div>
-            <button type="submit" className="btn btn-primary btn-block">
-              {submitted ? "Request received" : "Get My Free Home Assessment"}
-              {!submitted && <ArrowIcon />}
+            <button
+              type="submit"
+              className="btn btn-primary btn-block"
+              disabled={submitting || submitted}
+            >
+              {submitted
+                ? "Request received"
+                : submitting
+                ? "Sending…"
+                : "Get My Free Home Assessment"}
+              {!submitted && !submitting && <ArrowIcon />}
             </button>
             <p className="form-legal">
               By submitting, you agree to be contacted by MAQO Engineering Sdn
               Bhd about your solar assessment. No spam.
             </p>
+            {submitError && <p className="submit-note error show">{submitError}</p>}
             {submitted && (
               <p className="submit-note show">
                 Thanks — our ATAP team will call you within 1 business day.
@@ -1017,7 +1074,7 @@ export default function Page() {
       {/* Floating WhatsApp */}
       <a
         className="wa-float"
-        href="https://wa.me/60123220816"
+        href="https://wa.me/60187771095"
         aria-label="WhatsApp Us"
       >
         <WhatsAppIcon />
