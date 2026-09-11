@@ -61,7 +61,7 @@ const FAQS = [
 function MaqoLogo({ invert = false }: { invert?: boolean }) {
   return (
     <Image
-      src="/maqologo.png"
+      src="/evlandingpage/public/Maqo Solar_Logo.svg"
       alt="MAQO — Energizing a cleaner future"
       width={572}
       height={176}
