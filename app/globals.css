@@ -111,20 +111,9 @@ h3{font-size:1.12rem; letter-spacing:-0.02em;}
 }
 .link-arrow:hover{gap:12px; border-color:var(--green);}
 
-/* ---------- MAQO wordmark ---------- */
-.maqo-logo{display:inline-flex; flex-direction:column; line-height:1;}
-.maqo-word{
-  font-family:var(--font-head); font-weight:600; font-size:1.85rem;
-  letter-spacing:0.02em; color:var(--orange);
-}
-.maqo-tag{
-  margin-top:5px; font-family:var(--font-body); font-weight:600;
-  font-size:0.5rem; letter-spacing:0.155em; text-transform:uppercase;
-  color:var(--green);
-}
-.maqo-logo.invert .maqo-tag{color:#A3D959;}
-/* Sizing for the official artwork, if you drop it in as an <img> */
-.maqo-img{height:46px; width:auto;}
+/* ---------- MAQO wordmark (image) ---------- */
+.maqo-img{height:44px; width:auto; display:block;}
+.foot-brand .maqo-img{height:40px;}
 
 /* ---------- Header ---------- */
 header{
@@ -465,6 +454,6 @@ footer{background:var(--ink-2); color:rgba(255,255,255,0.72); padding:64px 0 108
   .nav-actions .btn-whatsapp span, .wa-float span{display:none;}
   .wa-float{padding:16px; right:16px; bottom:16px;}
   .nav-actions .btn{padding:10px 15px;}
-  .maqo-word{font-size:1.5rem;}
+  .maqo-img{height:34px;}
   .res-long{flex-direction:column; gap:16px;}
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useMemo, useState } from "react";
 
 type ChargeTime = "day" | "night" | "mixed";
@@ -53,28 +54,20 @@ const FAQS = [
 ];
 
 /*
- * MAQO wordmark: orange "maqo" over the green tagline, set in the geometric
- * heading face so it matches the supplied artwork.
- *
- * To use the official artwork file instead, save it to /public and replace the
- * inner markup with:
- *   <img src="/maqo-logo.png" alt="MAQO — Energizing a cleaner future" className="maqo-img" />
- * The `.maqo-img` rule in globals.css already sizes it for header and footer.
+ * MAQO wordmark, rendered from the logo artwork at /public/maqo-logo.svg
+ * (swap that file for the official export whenever you have it — the
+ * component and its sizing stay the same).
  */
 function MaqoLogo({ invert = false }: { invert?: boolean }) {
   return (
-    <span
-      className={"maqo-logo" + (invert ? " invert" : "")}
-      role="img"
-      aria-label="MAQO — Energizing a cleaner future"
-    >
-      <span className="maqo-word" aria-hidden="true">
-        maqo
-      </span>
-      <span className="maqo-tag" aria-hidden="true">
-        Energizing a cleaner future
-      </span>
-    </span>
+    <Image
+      src="/maqo-logo.svg"
+      alt="MAQO — Energizing a cleaner future"
+      width={572}
+      height={176}
+      className={"maqo-img" + (invert ? " invert" : "")}
+      priority
+    />
   );
 }
 
