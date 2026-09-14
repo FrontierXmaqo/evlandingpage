@@ -2,7 +2,7 @@ import { requireUser } from "@/lib/supabase/auth";
 import { createClient } from "@/lib/supabase/server";
 import { updateEnquiryStatus } from "./actions";
 
-const STATUSES = ["new", "contacted", "qualified", "closed"] as const;
+const STATUSES = ["new", "contacted", "qualified", "converted", "closed"] as const;
 
 export default async function EnquiriesPage() {
   await requireUser(["admin", "sales"]);

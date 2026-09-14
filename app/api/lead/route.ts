@@ -107,6 +107,49 @@ function extractCampaignId(pageUrl: string): string {
   }
 }
 
+const SOCIAL_HOSTS = [
+  "facebook.com",
+  "fb.com",
+  "instagram.com",
+  "tiktok.com",
+  "l.instagram.com",
+  "lm.facebook.com",
+  "t.co",
+  "twitter.com",
+  "x.com",
+  "linkedin.com",
+  "wa.me",
+  "whatsapp.com",
+];
+
+/**
+ * Coarse lead channel classification for the Performance Analytics page.
+ * Prefers explicit utm_source/utm_medium, then falls back to the referrer's
+ * hostname. Best-effort only — never blocks or fails the submission.
+ */
+function classifyLeadChannel(pageUrl: string, referrer: string): string {
+  try {
+    const u = new URL(pageUrl);
+    const utmSource = (u.searchParams.get("utm_source") ?? "").toLowerCase();
+    const utmMedium = (u.searchParams.get("utm_medium") ?? "").toLowerCase();
+    if (utmSource.includes("google") || utmMedium === "cpc" || utmMedium === "google") return "google";
+    if (SOCIAL_HOSTS.some((h) => utmSource.includes(h.split(".")[0]))) return "social";
+    if (utmSource) return utmSource;
+  } catch {
+    // fall through to referrer-based classification
+  }
+
+  if (!referrer) return "direct";
+  try {
+    const host = new URL(referrer).hostname.replace(/^www\./, "");
+    if (host.includes("google")) return "google";
+    if (SOCIAL_HOSTS.some((h) => host.includes(h))) return "social";
+    return host || "other";
+  } catch {
+    return "other";
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Blank webhook payload template (1:1 with the existing schema)
 // ---------------------------------------------------------------------------
@@ -345,9 +388,11 @@ export async function POST(req: NextRequest) {
       name: fullName,
       email: email || null,
       phone: phone || null,
-      message: [state, monthlyBill, propertyType, electricSupply]
-        .filter(Boolean)
-        .join(" | "),
+      state: state || null,
+      property_type: propertyType || null,
+      bill_range: monthlyBill || null,
+      electric_supply: electricSupply || null,
+      lead_channel: classifyLeadChannel(pageUrl, referrer),
       source: "landing_page",
     });
     if (enquiryError) {

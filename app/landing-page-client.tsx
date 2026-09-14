@@ -1,7 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+
+function track(event: "page_view" | "calculator_use") {
+  fetch("/api/track", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ event }),
+    keepalive: true,
+  }).catch(() => {
+    // Best-effort analytics beacon — never let this affect the visitor.
+  });
+}
 
 export type LeadFormOptions = {
   salutations: string[];
@@ -405,6 +416,17 @@ export default function LandingPageClient({
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const hasTrackedCalculatorUse = useRef(false);
+
+  useEffect(() => {
+    track("page_view");
+  }, []);
+
+  function trackCalculatorUseOnce() {
+    if (hasTrackedCalculatorUse.current) return;
+    hasTrackedCalculatorUse.current = true;
+    track("calculator_use");
+  }
 
   const chargeOptions = useMemo(
     () =>
@@ -671,7 +693,10 @@ export default function LandingPageClient({
                     max={1800}
                     step={10}
                     value={bill}
-                    onChange={(e) => setBill(Number(e.target.value))}
+                    onChange={(e) => {
+                      setBill(Number(e.target.value));
+                      trackCalculatorUseOnce();
+                    }}
                   />
                   <div className="range-val">RM {bill}</div>
                 </div>
@@ -686,10 +711,16 @@ export default function LandingPageClient({
                         }
                         role="button"
                         tabIndex={0}
-                        onClick={() => setChargeTime(opt.key)}
-                        onKeyDown={(e) =>
-                          e.key === "Enter" && setChargeTime(opt.key)
-                        }
+                        onClick={() => {
+                          setChargeTime(opt.key);
+                          trackCalculatorUseOnce();
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            setChargeTime(opt.key);
+                            trackCalculatorUseOnce();
+                          }
+                        }}
                       >
                         {opt.label}
                       </div>
