@@ -10,7 +10,7 @@ export async function updateUserRole(formData: FormData) {
 
   const id = String(formData.get("id") ?? "");
   const role = String(formData.get("role") ?? "");
-  if (!id || !["admin", "editor", "sales"].includes(role)) return;
+  if (!id || !["admin", "sales"].includes(role)) return;
 
   // RLS restricts this update to admins regardless of this check, but we
   // guard here too so a non-admin gets a clean redirect instead of a

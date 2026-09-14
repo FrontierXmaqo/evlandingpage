@@ -4,7 +4,7 @@ import LandingPageClient, {
   type LeadFormOptions,
 } from "./landing-page-client";
 
-// Revalidate periodically so an admin's edit in /admin/website-editor shows
+// Revalidate periodically so an admin's edit in /admin/lead-form shows
 // up on the public page without needing a full redeploy.
 export const revalidate = 60;
 

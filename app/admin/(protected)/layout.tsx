@@ -2,11 +2,10 @@ import Link from "next/link";
 import { requireUser } from "@/lib/supabase/auth";
 import { logout } from "../login/actions";
 
-const NAV_ITEMS: { href: string; label: string; roles?: Array<"admin" | "editor" | "sales"> }[] = [
+const NAV_ITEMS: { href: string; label: string; roles?: Array<"admin" | "sales"> }[] = [
   { href: "/admin/dashboard", label: "Dashboard" },
-  { href: "/admin/website-editor", label: "Website Editor", roles: ["admin", "editor"] },
-  { href: "/admin/packages", label: "Solar Packages", roles: ["admin", "sales"] },
-  { href: "/admin/calculator-settings", label: "Calculator Settings", roles: ["admin", "editor"] },
+  { href: "/admin/lead-form", label: "Lead Form", roles: ["admin"] },
+  { href: "/admin/calculator-settings", label: "Calculator Settings", roles: ["admin"] },
   { href: "/admin/enquiries", label: "Customer Enquiries", roles: ["admin", "sales"] },
   { href: "/admin/analytics", label: "Performance Analytics" },
   { href: "/admin/users", label: "User Management", roles: ["admin"] },

@@ -2,10 +2,9 @@ import Link from "next/link";
 import { requireUser } from "@/lib/supabase/auth";
 import { createClient } from "@/lib/supabase/server";
 
-const CARDS: { href: string; title: string; roles?: Array<"admin" | "editor" | "sales"> }[] = [
-  { href: "/admin/website-editor", title: "Website Editor", roles: ["admin", "editor"] },
-  { href: "/admin/packages", title: "Solar Packages", roles: ["admin", "sales"] },
-  { href: "/admin/calculator-settings", title: "Calculator Settings", roles: ["admin", "editor"] },
+const CARDS: { href: string; title: string; roles?: Array<"admin" | "sales"> }[] = [
+  { href: "/admin/lead-form", title: "Lead Form", roles: ["admin"] },
+  { href: "/admin/calculator-settings", title: "Solar Calculator Settings", roles: ["admin"] },
   { href: "/admin/enquiries", title: "Customer Enquiries", roles: ["admin", "sales"] },
   { href: "/admin/analytics", title: "Performance Analytics" },
   { href: "/admin/users", title: "User Management", roles: ["admin"] },

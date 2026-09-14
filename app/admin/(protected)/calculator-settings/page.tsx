@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { saveCalculatorSettings } from "./actions";
 
 export default async function CalculatorSettingsPage() {
-  await requireUser(["admin", "editor"]);
+  await requireUser(["admin"]);
   const supabase = await createClient();
 
   const { data: settings } = await supabase

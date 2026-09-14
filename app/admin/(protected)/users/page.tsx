@@ -2,7 +2,7 @@ import { requireUser } from "@/lib/supabase/auth";
 import { createClient } from "@/lib/supabase/server";
 import { updateUserRole } from "./actions";
 
-const ROLES = ["admin", "editor", "sales"] as const;
+const ROLES = ["admin", "sales"] as const;
 
 export default async function UsersPage() {
   const currentUser = await requireUser(["admin"]);

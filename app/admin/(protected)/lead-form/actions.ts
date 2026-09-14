@@ -4,41 +4,6 @@ import { revalidatePath } from "next/cache";
 import { requireUser } from "@/lib/supabase/auth";
 import { createClient } from "@/lib/supabase/server";
 
-export async function saveSection(formData: FormData) {
-  const user = await requireUser(["admin", "editor"]);
-  const supabase = await createClient();
-
-  const sectionKey = String(formData.get("section_key") ?? "");
-  const contentText = String(formData.get("content") ?? "");
-  const seoTitle = String(formData.get("seo_title") ?? "");
-  const seoDescription = String(formData.get("seo_description") ?? "");
-
-  if (!sectionKey) return;
-
-  let content: unknown;
-  try {
-    content = contentText ? JSON.parse(contentText) : {};
-  } catch {
-    return; // invalid JSON — silently ignore rather than corrupt stored content
-  }
-
-  // RLS also enforces admin/editor-only writes here — this call fails safely
-  // for any other role even if this action were somehow reached directly.
-  await supabase.from("website_content").upsert(
-    {
-      section_key: sectionKey,
-      content,
-      seo_title: seoTitle || null,
-      seo_description: seoDescription || null,
-      updated_by: user.id,
-      updated_at: new Date().toISOString(),
-    },
-    { onConflict: "section_key" }
-  );
-
-  revalidatePath("/admin/website-editor");
-}
-
 function linesToArray(text: string): string[] {
   return text
     .split("\n")
@@ -47,7 +12,7 @@ function linesToArray(text: string): string[] {
 }
 
 export async function saveLeadFormOptions(formData: FormData) {
-  const user = await requireUser(["admin", "editor"]);
+  const user = await requireUser(["admin"]);
   const supabase = await createClient();
 
   const salutations = linesToArray(String(formData.get("salutations") ?? ""));
@@ -68,8 +33,8 @@ export async function saveLeadFormOptions(formData: FormData) {
     return; // never leave the public form with an empty dropdown
   }
 
-  // RLS also restricts this update to admin/editor — this is defense in
-  // depth, not the actual access boundary.
+  // RLS also restricts this update to admins — this is defense in depth,
+  // not the actual access boundary.
   await supabase
     .from("lead_form_options")
     .update({
@@ -86,6 +51,6 @@ export async function saveLeadFormOptions(formData: FormData) {
 
   // The public landing page reads this table with a 60s ISR revalidate
   // window (see app/page.tsx) — force it to pick up the change immediately.
-  revalidatePath("/admin/website-editor");
+  revalidatePath("/admin/lead-form");
   revalidatePath("/");
 }

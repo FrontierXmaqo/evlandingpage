@@ -5,7 +5,7 @@ import { requireUser } from "@/lib/supabase/auth";
 import { createClient } from "@/lib/supabase/server";
 
 export async function saveCalculatorSettings(formData: FormData) {
-  const user = await requireUser(["admin", "editor"]);
+  const user = await requireUser(["admin"]);
   const supabase = await createClient();
 
   const ratePerKwh = Number(formData.get("rate_per_kwh"));
