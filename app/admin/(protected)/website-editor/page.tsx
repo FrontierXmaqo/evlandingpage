@@ -1,15 +1,15 @@
 import { requireUser } from "@/lib/supabase/auth";
 import { createClient } from "@/lib/supabase/server";
-import { saveSection } from "./actions";
+import { saveSection, saveLeadFormOptions } from "./actions";
 
 export default async function WebsiteEditorPage() {
   await requireUser(["admin", "editor"]);
   const supabase = await createClient();
 
-  const { data: sections } = await supabase
-    .from("website_content")
-    .select("*")
-    .order("section_key");
+  const [{ data: sections }, { data: leadFormOptions }] = await Promise.all([
+    supabase.from("website_content").select("*").order("section_key"),
+    supabase.from("lead_form_options").select("*").eq("id", 1).single(),
+  ]);
 
   return (
     <div>
@@ -17,6 +17,65 @@ export default async function WebsiteEditorPage() {
       <p style={{ color: "#64748b", marginBottom: 24 }}>
         Edit landing page section content and SEO metadata. Content is stored as JSON.
       </p>
+
+      <h2 style={{ fontSize: 16, marginBottom: 12 }}>Lead form dropdown options</h2>
+      <p style={{ color: "#64748b", marginBottom: 12, fontSize: 13 }}>
+        One option per line. These populate the dropdowns in the &quot;Free Home
+        Assessment&quot; form on the public landing page.
+      </p>
+      <form action={saveLeadFormOptions} style={{ ...card, marginBottom: 32 }}>
+        <label style={label}>Title (salutation)</label>
+        <textarea
+          name="salutations"
+          rows={4}
+          defaultValue={(leadFormOptions?.salutations ?? []).join("\n")}
+          style={input}
+        />
+
+        <label style={label}>State</label>
+        <textarea
+          name="states"
+          rows={6}
+          defaultValue={(leadFormOptions?.states ?? []).join("\n")}
+          style={input}
+        />
+
+        <label style={label}>Property type</label>
+        <textarea
+          name="property_types"
+          rows={4}
+          defaultValue={(leadFormOptions?.property_types ?? []).join("\n")}
+          style={input}
+        />
+
+        <label style={label}>Average monthly TNB bill</label>
+        <textarea
+          name="bill_ranges"
+          rows={5}
+          defaultValue={(leadFormOptions?.bill_ranges ?? []).join("\n")}
+          style={input}
+        />
+
+        <label style={label}>Electric supply</label>
+        <textarea
+          name="electric_supply_options"
+          rows={3}
+          defaultValue={(leadFormOptions?.electric_supply_options ?? []).join("\n")}
+          style={input}
+        />
+
+        <label style={label}>Preferred language</label>
+        <textarea
+          name="languages"
+          rows={3}
+          defaultValue={(leadFormOptions?.languages ?? []).join("\n")}
+          style={input}
+        />
+
+        <button type="submit" style={button}>
+          Save lead form options
+        </button>
+      </form>
 
       <form action={saveSection} style={card}>
         <h2 style={{ fontSize: 16, marginBottom: 12 }}>Add / update a section</h2>

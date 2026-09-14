@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { createPublicClient } from "@/lib/supabase/public";
 
 /*
  * Lead intake endpoint.
@@ -339,10 +339,8 @@ export async function POST(req: NextRequest) {
   // (/admin/enquiries), in addition to the existing webhook forward below.
   // Uses the anon key — RLS only permits INSERT here, never read/update, so
   // this can't be used to leak or tamper with other enquiries.
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (supabaseUrl && supabaseAnonKey) {
-    const supabase = createSupabaseClient(supabaseUrl, supabaseAnonKey);
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    const supabase = createPublicClient();
     const { error: enquiryError } = await supabase.from("enquiries").insert({
       name: fullName,
       email: email || null,
