@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/supabase/auth";
-import { logout } from "./login/actions";
+import { logout } from "../login/actions";
 
 const NAV_ITEMS: { href: string; label: string; roles?: Array<"admin" | "editor" | "sales"> }[] = [
   { href: "/admin/dashboard", label: "Dashboard" },

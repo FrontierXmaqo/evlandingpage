@@ -1013,7 +1013,6 @@ export default function Page() {
                   <option>Malay</option>
                 </select>
               </div>
-            </div>
             <button
               type="submit"
               className="btn btn-primary btn-block"
