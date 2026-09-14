@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createPublicClient } from "@/lib/supabase/public";
 
 /*
  * Lead intake endpoint.
@@ -332,6 +333,26 @@ export async function POST(req: NextRequest) {
   }
   if (email && !isValidEmail(email)) {
     return NextResponse.json({ ok: false, error: "invalid_email" }, { status: 400 });
+  }
+
+  // Record the enquiry in Supabase so it shows up in the internal CMS
+  // (/admin/enquiries), in addition to the existing webhook forward below.
+  // Uses the anon key — RLS only permits INSERT here, never read/update, so
+  // this can't be used to leak or tamper with other enquiries.
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    const supabase = createPublicClient();
+    const { error: enquiryError } = await supabase.from("enquiries").insert({
+      name: fullName,
+      email: email || null,
+      phone: phone || null,
+      message: [state, monthlyBill, propertyType, electricSupply]
+        .filter(Boolean)
+        .join(" | "),
+      source: "landing_page",
+    });
+    if (enquiryError) {
+      console.error("Failed to record enquiry in Supabase:", enquiryError.message);
+    }
   }
 
   const webhookUrl = process.env.LEAD_WEBHOOK_URL;
