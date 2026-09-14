@@ -38,28 +38,42 @@ export const DEFAULT_LEAD_FORM_OPTIONS: LeadFormOptions = {
   languages: ["English", "Chinese", "Malay"],
 };
 
+export type CalculatorSettings = {
+  ratePerKwh: number;
+  avgKwhPerKwpMonth: number;
+  referenceSystemKwp: number;
+  kwpPerPanel: number;
+  offsetDayPercent: number;
+  offsetNightPercent: number;
+  offsetMixedPercent: number;
+};
+
+export const DEFAULT_CALCULATOR_SETTINGS: CalculatorSettings = {
+  ratePerKwh: 0.44,
+  avgKwhPerKwpMonth: 1463,
+  referenceSystemKwp: 14.3,
+  kwpPerPanel: 0.65,
+  offsetDayPercent: 80,
+  offsetNightPercent: 90,
+  offsetMixedPercent: 85,
+};
+
 type ChargeTime = "day" | "night" | "mixed";
 
-const CHARGE_OPTIONS: { key: ChargeTime; label: string; offsetRate: number; note: string }[] = [
-  {
-    key: "day",
+const CHARGE_META: Record<ChargeTime, { label: string; note: string }> = {
+  day: {
     label: "Mostly during the day",
-    offsetRate: 0.8,
     note: "Panels alone usually cover this — your charging lines up with solar generation.",
   },
-  {
-    key: "night",
+  night: {
     label: "Mostly at night",
-    offsetRate: 0.9,
     note: "We'd recommend battery storage so today's solar covers tonight's charging.",
   },
-  {
-    key: "mixed",
+  mixed: {
     label: "Mixed / it varies",
-    offsetRate: 0.85,
     note: "A mid-size battery is usually worth it to smooth out the difference.",
   },
-];
+};
 
 const FAQS = [
   {
@@ -380,8 +394,10 @@ function ElectronFlow() {
 
 export default function LandingPageClient({
   leadFormOptions = DEFAULT_LEAD_FORM_OPTIONS,
+  calculatorSettings = DEFAULT_CALCULATOR_SETTINGS,
 }: {
   leadFormOptions?: LeadFormOptions;
+  calculatorSettings?: CalculatorSettings;
 }) {
   const [bill, setBill] = useState(650);
   const [chargeTime, setChargeTime] = useState<ChargeTime>("night");
@@ -390,12 +406,30 @@ export default function LandingPageClient({
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const selected = CHARGE_OPTIONS.find((c) => c.key === chargeTime)!;
+  const chargeOptions = useMemo(
+    () =>
+      (["day", "night", "mixed"] as ChargeTime[]).map((key) => ({
+        key,
+        ...CHARGE_META[key],
+        offsetRate:
+          key === "day"
+            ? calculatorSettings.offsetDayPercent / 100
+            : key === "night"
+            ? calculatorSettings.offsetNightPercent / 100
+            : calculatorSettings.offsetMixedPercent / 100,
+      })),
+    [calculatorSettings]
+  );
+
+  const selected = chargeOptions.find((c) => c.key === chargeTime)!;
 
   const results = useMemo(() => {
-    const totalKwh = bill / 0.44;
-    const systemKwp = Math.max(4, (totalKwh / 1463) * 14.3);
-    const panels = Math.round(systemKwp / 0.65);
+    const totalKwh = bill / calculatorSettings.ratePerKwh;
+    const systemKwp = Math.max(
+      4,
+      (totalKwh / calculatorSettings.avgKwhPerKwpMonth) * calculatorSettings.referenceSystemKwp
+    );
+    const panels = Math.round(systemKwp / calculatorSettings.kwpPerPanel);
     const monthlySavings = bill * selected.offsetRate;
     const newBill = Math.max(15, bill - monthlySavings);
     return {
@@ -406,7 +440,7 @@ export default function LandingPageClient({
       tenYear: Math.round(monthlySavings * 120),
       thirtyYear: Math.round(monthlySavings * 360),
     };
-  }, [bill, selected]);
+  }, [bill, selected, calculatorSettings]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -644,7 +678,7 @@ export default function LandingPageClient({
                 <div className="field">
                   <label>When do you usually charge your car?</label>
                   <div className="toggle-row">
-                    {CHARGE_OPTIONS.map((opt) => (
+                    {chargeOptions.map((opt) => (
                       <div
                         key={opt.key}
                         className={
